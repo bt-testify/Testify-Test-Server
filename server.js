@@ -275,7 +275,7 @@ function authenticator(req, res, next) {
 }
 
 server.post('/api/login', (req, res) => {
-  const { username, password } = req.body;
+  const { username, password, isTeacher } = req.body;
   const findUserName = item => {
     return item.username === username;
   };
@@ -286,17 +286,54 @@ server.post('/api/login', (req, res) => {
   const foundPassword = users.find(findPassword);
   if (!foundUserName) {
     return sendUserError("We don't have that username!", res);
+  } else if (foundUserName.isTeacher !== isTeacher) {
+    res.status(403).json({
+      error:
+        'Please make sure to check teacher if you are a teacher. Leave unckeced if you are a student'
+    });
   } else if (foundUserName.password === password) {
+    req.loggedIn = true;
+    setTimeout(() => {
+      res.status(200).json({
+        payload: token,
+        user: foundUserName
+      });
+    }, 1000);
+  } else {
+    res.status(403).json({ error: 'Username or Password incorrect.' });
+  }
+});
+
+server.post('/api/signUp', (req, res) => {
+  const { username, password, email, teacher } = req.body;
+  const newUser = { username, password, emaial, teacher, id: userID };
+  const findUserName = item => {
+    return item.username === username;
+  };
+  const findEmail = item => {
+    return item.email === email;
+  };
+  const foundUserName = users.find(findUserName);
+  const foundEmail = users.find(findEmail);
+  if (foundUserName) {
+    res.status(403).json({
+      error: 'That username already exists. Please choose another username'
+    });
+  } else if (foundEmail) {
+    res.status(403).json({
+      error:
+        'That email is already being used. Request reset password or use a different email'
+    });
+  } else {
     req.loggedIn = true;
     setTimeout(() => {
       res.status(200).json({
         payload: token
       });
     }, 1000);
-  } else {
-    res
-      .status(403)
-      .json({ error: 'Username or Password incorrect. Please see Readme' });
+    users.push(newItem);
+    userID++;
+    res.json(newUser);
   }
 });
 
@@ -319,7 +356,7 @@ server.get('/testById/:id', authenticator, (req, res) => {
 
 server.post('/tests', authenticator, (req, res) => {
   const { score, creator, title, testTaker, questions } = req.body;
-  const newItem = { title, price, imageUrl, description, shipping, id: testID };
+  const newItem = { score, title, creator, testTaker, questions, id: testID };
   if (!title || !creator) {
     return sendUserError(
       'Ya gone did goofed! title and creator are required to create an item in the item DB.',
