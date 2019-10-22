@@ -53,6 +53,216 @@ let tests = [
   }
 ];
 
+let users = [
+  {
+    id: 0,
+    username: 'steve123',
+    name: 'steve',
+    email: 'steve@gmail.com ',
+    password: '123',
+    isTeacher: true,
+    classes: [
+      [{ name: 'sally' }, { name: 'sally' }, { name: 'sally' }],
+      [{ name: 'sally' }, { name: 'sally' }, { name: 'sally' }],
+      [{ name: 'sally' }, { name: 'sally' }, { name: 'sally' }]
+    ],
+    students: [
+      {
+        id: 2,
+        name: 'Sally',
+        email: 'sally@school.com',
+        password: '678',
+        isTeacher: false,
+        teacherName: 'Mrs. Mathews',
+        class: 'Math',
+        grade: '5th'
+      }
+    ],
+    testBank: [
+      {
+        score: 0,
+        isEditing: false,
+        id: 1,
+        creator: 'Mrs. Mathews',
+        title: 'Math Test',
+        testTaker: 'Sally',
+        questions: [
+          {
+            id: 1,
+            correct: false,
+            question: "What's 6X6 ?",
+            type: 'multiple-choice',
+            options: [36, 34, 26, 52],
+            answer: 36
+          },
+          {
+            id: 2,
+            correct: false,
+            question: 'True or False, 6X6=36?',
+            type: 'true-false',
+            options: ['T', 'F'],
+            answer: 'T'
+          },
+          {
+            id: 3,
+            correct: false,
+            question: 'What is the order of operations?',
+            type: 'short-answer',
+            options: 'n/a',
+            answer: 'parentheses, exponents, multiply, divide, add, subtract'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 1,
+    username: 'mathews456',
+    name: 'Mrs. Mathews',
+    email: 'mathews@gmail.com ',
+    password: '456',
+    isTeacher: true,
+    classes: [
+      [{ name: 'jonny' }, { name: 'jonny' }, { name: 'jonny' }],
+      [{ name: 'jonny' }, { name: 'jonny' }, { name: 'jonny' }],
+      [{ name: 'jonny' }, { name: 'jonny' }, { name: 'jonny' }]
+    ],
+    students: [
+      {
+        id: 2,
+        name: 'Sally',
+        email: 'sally@school.com',
+        password: '678',
+        isTeacher: false,
+        teacherName: 'Mrs. Mathews',
+        class: 'Math',
+        grade: '5th'
+      }
+    ],
+    testBank: [
+      {
+        score: 0,
+        isEditing: false,
+        id: 1,
+        creator: 'Mrs. Mathews',
+        title: 'Math Test',
+        testTaker: 'Sally',
+        questions: [
+          {
+            id: 1,
+            correct: false,
+            question: "What's 6X6 ?",
+            type: 'multiple-choice',
+            options: [36, 34, 26, 52],
+            answer: 36
+          },
+          {
+            id: 2,
+            correct: false,
+            question: 'True or False, 6X6=36?',
+            type: 'true-false',
+            options: ['T', 'F'],
+            answer: 'T'
+          },
+          {
+            id: 3,
+            correct: false,
+            question: 'What is the order of operations?',
+            type: 'short-answer',
+            options: 'n/a',
+            answer: 'parentheses, exponents, multiply, divide, add, subtract'
+          }
+        ]
+      }
+    ]
+  },
+  {
+    id: 2,
+    username: 'sally789',
+    name: 'Sally',
+    email: 'sally@school.com',
+    password: '789',
+    isTeacher: false,
+    teacherName: 'Mrs. Mathews',
+    class: 'Math',
+    grade: '5th',
+    assignedTests: [
+      {
+        score: 0,
+        isEditing: false,
+        id: 1,
+        creator: 'Mrs. Mathews',
+        title: 'Math Test',
+        testTaker: 'Sally',
+        questions: [
+          {
+            id: 1,
+            correct: false,
+            question: "What's 6X6 ?",
+            type: 'multiple-choice',
+            options: [36, 34, 26, 52],
+            answer: 36
+          },
+          {
+            id: 2,
+            correct: false,
+            question: 'True or False, 6X6=36?',
+            type: 'true-false',
+            options: ['T', 'F'],
+            answer: 'T'
+          },
+          {
+            id: 3,
+            correct: false,
+            question: 'What is the order of operations?',
+            type: 'short-answer',
+            options: 'n/a',
+            answer: 'parentheses, exponents, multiply, divide, add, subtract'
+          }
+        ]
+      }
+    ],
+    completedTests: [
+      {
+        score: 0,
+        isEditing: false,
+        id: 1,
+        creator: 'Mrs. Mathews',
+        title: 'Math Test',
+        testTaker: 'Sally',
+        questions: [
+          {
+            id: 1,
+            correct: false,
+            question: "What's 6X6 ?",
+            type: 'multiple-choice',
+            options: [36, 34, 26, 52],
+            answer: 36
+          },
+          {
+            id: 2,
+            correct: false,
+            question: 'True or False, 6X6=36?',
+            type: 'true-false',
+            options: ['T', 'F'],
+            answer: 'T'
+          },
+          {
+            id: 3,
+            correct: false,
+            question: 'What is the order of operations?',
+            type: 'short-answer',
+            options: 'n/a',
+            answer: 'parentheses, exponents, multiply, divide, add, subtract'
+          }
+        ]
+      }
+    ]
+  }
+];
+
+let userID = 3;
+
 let testID = 2;
 
 function authenticator(req, res, next) {
@@ -66,7 +276,17 @@ function authenticator(req, res, next) {
 
 server.post('/api/login', (req, res) => {
   const { username, password } = req.body;
-  if (username === 'steve' && password === '123') {
+  const findUserName = item => {
+    return item.username === username;
+  };
+  const findPassword = item => {
+    return item.password === password;
+  };
+  const foundUserName = users.find(findUserName);
+  const foundPassword = users.find(findPassword);
+  if (!foundUserName) {
+    return sendUserError("We don't have that username!", res);
+  } else if (foundUserName.password === password) {
     req.loggedIn = true;
     setTimeout(() => {
       res.status(200).json({
