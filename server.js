@@ -275,7 +275,7 @@ function authenticator(req, res, next) {
 }
 
 server.post('/api/login', (req, res) => {
-  const { username, password, isTeacher } = req.body;
+  const { username, password } = req.body;
   const findUserName = item => {
     return item.username === username;
   };
@@ -286,11 +286,6 @@ server.post('/api/login', (req, res) => {
   const foundPassword = users.find(findPassword);
   if (!foundUserName) {
     return sendUserError("We don't have that username!", res);
-  } else if (foundUserName.isTeacher !== isTeacher) {
-    res.status(403).json({
-      error:
-        'Please make sure to check teacher if you are a teacher. Leave unckeced if you are a student'
-    });
   } else if (foundUserName.password === password) {
     req.loggedIn = true;
     setTimeout(() => {
