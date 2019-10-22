@@ -305,8 +305,35 @@ server.post('/api/login', (req, res) => {
 });
 
 server.post('/api/signUp', (req, res) => {
-  const { username, password, email, teacher } = req.body;
-  const newUser = { username, password, emaial, teacher, id: userID };
+  const {
+    username,
+    password,
+    email,
+    isTeacher,
+    teacherName,
+    teacherID,
+    students,
+    testBank,
+    classSubject,
+    grade,
+    assignedTests,
+    completedTests
+  } = req.body;
+  const newUser = {
+    id: userID,
+    username,
+    email,
+    password,
+    isTeacher,
+    teacherID,
+    teacherName,
+    students,
+    testBank,
+    classSubject,
+    grade,
+    assignedTests,
+    completedTests
+  };
   const findUserName = item => {
     return item.username === username;
   };
@@ -328,12 +355,12 @@ server.post('/api/signUp', (req, res) => {
     req.loggedIn = true;
     setTimeout(() => {
       res.status(200).json({
-        payload: token
+        payload: token,
+        newUser
       });
     }, 1000);
-    users.push(newItem);
+    users.push(newUser);
     userID++;
-    res.json(newUser);
   }
 });
 
