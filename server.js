@@ -20,7 +20,7 @@ let tests = [
   {
     score: 0,
     isEditing: false,
-    id: 1,
+    id: 0,
     creator: 'Mrs. Mathews',
     title: 'Math Test',
     testTaker: 'Sally',
@@ -62,58 +62,42 @@ let users = [
     password: '123',
     isTeacher: true,
     classes: [
-      [{ name: 'sally' }, { name: 'sally' }, { name: 'sally' }],
-      [{ name: 'sally' }, { name: 'sally' }, { name: 'sally' }],
-      [{ name: 'sally' }, { name: 'sally' }, { name: 'sally' }]
-    ],
-    students: [
       {
-        id: 2,
-        name: 'Sally',
-        email: 'sally@school.com',
-        password: '678',
-        isTeacher: false,
-        teacherName: 'Mrs. Mathews',
-        class: 'Math',
-        grade: '5th'
-      }
-    ],
-    testBank: [
+        id: 0,
+        subject: 'Math',
+        students: [2],
+        testsAssigned: [
+          {
+            id: 0,
+            title: 'Math Test',
+            assignedDate: '10/22/19',
+            dueDate: '10/24/19'
+          }
+        ]
+      },
       {
-        score: 0,
-        isEditing: false,
         id: 1,
-        creator: 'Mrs. Mathews',
-        title: 'Math Test',
-        testTaker: 'Sally',
-        questions: [
+        subject: 'History',
+        students: [2],
+        testsAssigned: [
           {
-            id: 1,
-            correct: false,
-            question: "What's 6X6 ?",
-            type: 'multiple-choice',
-            options: [36, 34, 26, 52],
-            answer: 36
-          },
-          {
-            id: 2,
-            correct: false,
-            question: 'True or False, 6X6=36?',
-            type: 'true-false',
-            options: ['T', 'F'],
-            answer: 'T'
-          },
-          {
-            id: 3,
-            correct: false,
-            question: 'What is the order of operations?',
-            type: 'short-answer',
-            options: 'n/a',
-            answer: 'parentheses, exponents, multiply, divide, add, subtract'
+            id: 0,
+            title: 'History Test',
+            assignedDate: '10/22/19',
+            dueDate: '10/25/19'
           }
         ]
       }
-    ]
+    ],
+
+    studentIds: [2],
+    testIds: [0],
+
+    teacherName: '',
+    teacherId: 0,
+    gpa: 0,
+    assignedTests: [],
+    completedTests: []
   },
   {
     id: 1,
@@ -123,58 +107,42 @@ let users = [
     password: '456',
     isTeacher: true,
     classes: [
-      [{ name: 'jonny' }, { name: 'jonny' }, { name: 'jonny' }],
-      [{ name: 'jonny' }, { name: 'jonny' }, { name: 'jonny' }],
-      [{ name: 'jonny' }, { name: 'jonny' }, { name: 'jonny' }]
-    ],
-    students: [
       {
-        id: 2,
-        name: 'Sally',
-        email: 'sally@school.com',
-        password: '678',
-        isTeacher: false,
-        teacherName: 'Mrs. Mathews',
-        class: 'Math',
-        grade: '5th'
-      }
-    ],
-    testBank: [
+        id: 0,
+        subject: 'Math',
+        students: [2],
+        testsAssigned: [
+          {
+            id: 0,
+            title: 'Math Test',
+            assignedDate: '10/22/19',
+            dueDate: '10/24/19'
+          }
+        ]
+      },
       {
-        score: 0,
-        isEditing: false,
         id: 1,
-        creator: 'Mrs. Mathews',
-        title: 'Math Test',
-        testTaker: 'Sally',
-        questions: [
+        subject: 'History',
+        students: [2],
+        testsAssigned: [
           {
-            id: 1,
-            correct: false,
-            question: "What's 6X6 ?",
-            type: 'multiple-choice',
-            options: [36, 34, 26, 52],
-            answer: 36
-          },
-          {
-            id: 2,
-            correct: false,
-            question: 'True or False, 6X6=36?',
-            type: 'true-false',
-            options: ['T', 'F'],
-            answer: 'T'
-          },
-          {
-            id: 3,
-            correct: false,
-            question: 'What is the order of operations?',
-            type: 'short-answer',
-            options: 'n/a',
-            answer: 'parentheses, exponents, multiply, divide, add, subtract'
+            id: 0,
+            title: 'History Test',
+            assignedDate: '10/22/19',
+            dueDate: '10/25/19'
           }
         ]
       }
-    ]
+    ],
+
+    studentIds: [2],
+    testIds: [0],
+
+    teacherName: '',
+    teacherId: 0,
+    gpa: 0,
+    assignedTests: [],
+    completedTests: []
   },
   {
     id: 2,
@@ -183,81 +151,16 @@ let users = [
     email: 'sally@school.com',
     password: '789',
     isTeacher: false,
+    classes: [],
+
+    studentIds: [2],
+    testIds: [0],
+
     teacherName: 'Mrs. Mathews',
-    class: 'Math',
-    grade: '5th',
-    assignedTests: [
-      {
-        score: 0,
-        isEditing: false,
-        id: 1,
-        creator: 'Mrs. Mathews',
-        title: 'Math Test',
-        testTaker: 'Sally',
-        questions: [
-          {
-            id: 1,
-            correct: false,
-            question: "What's 6X6 ?",
-            type: 'multiple-choice',
-            options: [36, 34, 26, 52],
-            answer: 36
-          },
-          {
-            id: 2,
-            correct: false,
-            question: 'True or False, 6X6=36?',
-            type: 'true-false',
-            options: ['T', 'F'],
-            answer: 'T'
-          },
-          {
-            id: 3,
-            correct: false,
-            question: 'What is the order of operations?',
-            type: 'short-answer',
-            options: 'n/a',
-            answer: 'parentheses, exponents, multiply, divide, add, subtract'
-          }
-        ]
-      }
-    ],
-    completedTests: [
-      {
-        score: 0,
-        isEditing: false,
-        id: 1,
-        creator: 'Mrs. Mathews',
-        title: 'Math Test',
-        testTaker: 'Sally',
-        questions: [
-          {
-            id: 1,
-            correct: false,
-            question: "What's 6X6 ?",
-            type: 'multiple-choice',
-            options: [36, 34, 26, 52],
-            answer: 36
-          },
-          {
-            id: 2,
-            correct: false,
-            question: 'True or False, 6X6=36?',
-            type: 'true-false',
-            options: ['T', 'F'],
-            answer: 'T'
-          },
-          {
-            id: 3,
-            correct: false,
-            question: 'What is the order of operations?',
-            type: 'short-answer',
-            options: 'n/a',
-            answer: 'parentheses, exponents, multiply, divide, add, subtract'
-          }
-        ]
-      }
-    ]
+    teacherId: 1,
+    gpa: 0,
+    assignedTests: [0, 1, 2, 3],
+    completedTests: [0, 1]
   }
 ];
 
@@ -373,6 +276,16 @@ server.get('/testById/:id', authenticator, (req, res) => {
     return sendUserError('No Item found by that ID', res);
   } else {
     res.json(foundTest);
+  }
+});
+
+server.get('testByCreator/:creator', authenticator, (req, res) => {
+  const { creator } = req.params;
+  const results = tests.filter(test =>
+    test.creator.toLowerCase().includes(creator.toLocaleLowerCase())
+  );
+  if (results.length > 0) {
+    res.json(results);
   }
 });
 
