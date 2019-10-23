@@ -401,6 +401,7 @@ server.get('/teachers', (req, res) => {
 server.get('/allusers', authenticator, (req, res) => {
   res.json(users);
 });
+
 server.get('/users/:id', authenticator, (req, res) => {
   const { id } = req.params;
   const foundUser = users.find(item => item.id == id);
@@ -409,6 +410,22 @@ server.get('/users/:id', authenticator, (req, res) => {
     const ItemRemoved = { ...foundUser };
     users = users.filter(item => item.id != id);
     res.status(200).json(users);
+  } else {
+    sendUserError('No user by that ID exists in the user DB', res);
+  }
+});
+
+//so, send student id up. find students teacher. search teachers classe's students to find the class that contains the student.
+//then send that class down into state to play with the tests and the assignments
+server.get('/getAssignments/:id', authenticator, (req, res) => {
+  const { id } = req.params;
+  const foundUser = users.find(item => item.id == id);
+
+  if (foundUser) {
+    const teacher = users.find(item => item.id == foundUser.teacherId)
+    const studentClass = teacher.classes.find(item => item.students.find(stud => stud === foundUser.id) );
+    
+    res.status(200).json(studentClass);
   } else {
     sendUserError('No user by that ID exists in the user DB', res);
   }
