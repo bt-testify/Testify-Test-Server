@@ -389,12 +389,12 @@ server.get('/', function(req, res) {
 });
 
 server.get('/teachers', (req, res) => {
-  let filtered = users.filter((usr)=>{
+  let filtered = users.filter(usr => {
     return usr.isTeacher;
-  })
-  let reduced = filtered.map((usr)=>{
-    return ({ id:usr.id, name:usr.name })
-  })
+  });
+  let reduced = filtered.map(usr => {
+    return { id: usr.id, name: usr.name };
+  });
   res.json(reduced);
 });
 
