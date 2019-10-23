@@ -205,6 +205,7 @@ server.post('/api/login', (req, res) => {
 server.post('/api/signUp', (req, res) => {
   const {
     username,
+    name,
     password,
     email,
     isTeacher,
@@ -220,6 +221,7 @@ server.post('/api/signUp', (req, res) => {
   const newUser = {
     id: userID,
     username,
+    name,
     email,
     password,
     isTeacher,
@@ -259,6 +261,7 @@ server.post('/api/signUp', (req, res) => {
     }, 1000);
     users.push(newUser);
     userID++;
+    users[newUser.teacherID].studentIds.push(newUser.id);
   }
 });
 
