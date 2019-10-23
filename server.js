@@ -239,6 +239,7 @@ server.post('/api/login', (req, res) => {
 server.post('/api/signUp', (req, res) => {
   const {
     username,
+    name,
     password,
     email,
     isTeacher,
@@ -254,6 +255,7 @@ server.post('/api/signUp', (req, res) => {
   const newUser = {
     id: userID,
     username,
+    name,
     email,
     password,
     isTeacher,
@@ -293,6 +295,7 @@ server.post('/api/signUp', (req, res) => {
     }, 1000);
     users.push(newUser);
     userID++;
+    users[newUser.teacherID].studentIds.push(newUser.id);
   }
 });
 
@@ -383,6 +386,32 @@ server.delete('/tests/:id', authenticator, (req, res) => {
 
 server.get('/', function(req, res) {
   res.send('App is working 👍');
+});
+
+server.get('/teachers', (req, res) => {
+  let filtered = users.filter((usr)=>{
+    return usr.isTeacher;
+  })
+  let reduced = filtered.map((usr)=>{
+    return ({ id:usr.id, name:usr.name })
+  })
+  res.json(reduced);
+});
+
+server.get('/allusers', authenticator, (req, res) => {
+  res.json(users);
+});
+server.get('/users/:id', authenticator, (req, res) => {
+  const { id } = req.params;
+  const foundUser = users.find(item => item.id == id);
+
+  if (foundUser) {
+    const ItemRemoved = { ...foundUser };
+    users = users.filter(item => item.id != id);
+    res.status(200).json(users);
+  } else {
+    sendUserError('No user by that ID exists in the user DB', res);
+  }
 });
 
 server.listen(port, err => {
