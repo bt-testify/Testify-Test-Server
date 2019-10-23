@@ -23,7 +23,41 @@ let tests = [
     id: 0,
     creator: 'Mrs. Mathews',
     title: 'Math Test',
-    testTaker: 'Sally',
+    testTaker: '',
+    questions: [
+      {
+        id: 1,
+        correct: false,
+        question: "What's 6X6 ?",
+        type: 'multiple-choice',
+        options: [36, 34, 26, 52],
+        answer: 36
+      },
+      {
+        id: 2,
+        correct: false,
+        question: 'True or False, 6X6=36?',
+        type: 'true-false',
+        options: ['T', 'F'],
+        answer: 'T'
+      },
+      {
+        id: 3,
+        correct: false,
+        question: 'What is the order of operations?',
+        type: 'short-answer',
+        options: 'n/a',
+        answer: 'parentheses, exponents, multiply, divide, add, subtract'
+      }
+    ]
+  },
+  {
+    score: 0,
+    isEditing: false,
+    id: 1,
+    creator: 'Steve',
+    title: 'History Test',
+    testTaker: '',
     questions: [
       {
         id: 1,
@@ -328,7 +362,7 @@ server.put('/tests/:id', authenticator, (req, res) => {
     if (title) foundTest.title = title;
     if (testTaker) foundTest.testTaker = testTaker;
     if (questions) foundTest.questions = questions;
-    res.json(tests);
+    res.json(foundTest);
   }
 });
 
