@@ -316,7 +316,7 @@ server.get('/testById/:id', authenticator, (req, res) => {
   }
 });
 
-server.get('testByCreator/:creator', authenticator, (req, res) => {
+server.get('/testsByCreator/:creator', authenticator, (req, res) => {
   const { creator } = req.params;
   const results = tests.filter(test =>
     test.creator.toLowerCase().includes(creator.toLocaleLowerCase())
@@ -327,27 +327,29 @@ server.get('testByCreator/:creator', authenticator, (req, res) => {
 });
 
 server.post('/tests', authenticator, (req, res) => {
-  const { score, creator, title, testTaker, questions } = req.body;
-  const newItem = { score, title, creator, testTaker, questions, id: testID };
-  if (!title || !creator) {
-    return sendUserError(
-      'Ya gone did goofed! title and creator are required to create an item in the item DB.',
-      res
-    );
-  }
-  const findTestByTitle = item => {
-    return item.title === title;
+  const {
+    score,
+    creator,
+    title,
+    testTaker,
+    questions,
+    isEditing,
+    isSaving
+  } = req.body;
+  const newItem = {
+    score,
+    title,
+    creator,
+    testTaker,
+    questions,
+    isEditing,
+    isSaving,
+    id: testID
   };
-  if (tests.find(findTestByTitle)) {
-    return sendUserError(
-      `Ya gone did goofed! ${title} already exists in the item DB.`,
-      res
-    );
-  }
 
   tests.push(newItem);
   testID++;
-  res.json(tests);
+  res.json(newItem);
 });
 
 server.put('/tests/:id', authenticator, (req, res) => {
