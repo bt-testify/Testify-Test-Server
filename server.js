@@ -20,10 +20,44 @@ let tests = [
   {
     score: 0,
     isEditing: false,
-    id: 1,
+    id: 0,
     creator: 'Mrs. Mathews',
     title: 'Math Test',
-    testTaker: 'Sally',
+    testTaker: '',
+    questions: [
+      {
+        id: 1,
+        correct: false,
+        question: "What's 6X6 ?",
+        type: 'multiple-choice',
+        options: [36, 34, 26, 52],
+        answer: 36
+      },
+      {
+        id: 2,
+        correct: false,
+        question: 'True or False, 6X6=36?',
+        type: 'true-false',
+        options: ['T', 'F'],
+        answer: 'T'
+      },
+      {
+        id: 3,
+        correct: false,
+        question: 'What is the order of operations?',
+        type: 'short-answer',
+        options: 'n/a',
+        answer: 'parentheses, exponents, multiply, divide, add, subtract'
+      }
+    ]
+  },
+  {
+    score: 0,
+    isEditing: false,
+    id: 1,
+    creator: 'Steve',
+    title: 'History Test',
+    testTaker: '',
     questions: [
       {
         id: 1,
@@ -53,6 +87,120 @@ let tests = [
   }
 ];
 
+let users = [
+  {
+    id: 0,
+    username: 'steve123',
+    name: 'steve',
+    email: 'steve@gmail.com ',
+    password: '123',
+    isTeacher: true,
+    classes: [
+      {
+        id: 0,
+        subject: 'Math',
+        students: [2],
+        testsAssigned: [
+          {
+            id: 0,
+            title: 'Math Test',
+            assignedDate: '10/22/19',
+            dueDate: '10/24/19'
+          }
+        ]
+      },
+      {
+        id: 1,
+        subject: 'History',
+        students: [2],
+        testsAssigned: [
+          {
+            id: 0,
+            title: 'History Test',
+            assignedDate: '10/22/19',
+            dueDate: '10/25/19'
+          }
+        ]
+      }
+    ],
+
+    studentIds: [2],
+    testIds: [0],
+
+    teacherName: '',
+    teacherId: 0,
+    gpa: 0,
+    assignedTests: [],
+    completedTests: []
+  },
+  {
+    id: 1,
+    username: 'mathews456',
+    name: 'Mrs. Mathews',
+    email: 'mathews@gmail.com ',
+    password: '456',
+    isTeacher: true,
+    classes: [
+      {
+        id: 0,
+        subject: 'Math',
+        students: [2],
+        testsAssigned: [
+          {
+            id: 0,
+            title: 'Math Test',
+            assignedDate: '10/22/19',
+            dueDate: '10/24/19'
+          }
+        ]
+      },
+      {
+        id: 1,
+        subject: 'History',
+        students: [2],
+        testsAssigned: [
+          {
+            id: 0,
+            title: 'History Test',
+            assignedDate: '10/22/19',
+            dueDate: '10/25/19'
+          }
+        ]
+      }
+    ],
+
+    studentIds: [2],
+    testIds: [0],
+
+    teacherName: '',
+    teacherId: 0,
+    gpa: 0,
+    assignedTests: [],
+    completedTests: []
+  },
+  {
+    id: 2,
+    username: 'sally789',
+    name: 'Sally',
+    email: 'sally@school.com',
+    password: '789',
+    isTeacher: false,
+    classes: [],
+
+    studentIds: [2],
+    testIds: [0],
+
+    teacherName: 'Mrs. Mathews',
+    teacherId: 1,
+    gpa: 0,
+    assignedTests: [0, 1, 2, 3],
+    completedTests: [0, 1] 
+    // {testid: testid, testTitle, answersList, gradedAnswers, scorePercentage}
+  }
+];
+
+let userID = 3;
+
 let testID = 2;
 
 function authenticator(req, res, next) {
@@ -66,17 +214,89 @@ function authenticator(req, res, next) {
 
 server.post('/api/login', (req, res) => {
   const { username, password } = req.body;
-  if (username === 'steve' && password === '123') {
+  const findUserName = item => {
+    return item.username === username;
+  };
+  const findPassword = item => {
+    return item.password === password;
+  };
+  const foundUserName = users.find(findUserName);
+  const foundPassword = users.find(findPassword);
+  if (!foundUserName) {
+    return sendUserError("We don't have that username!", res);
+  } else if (foundUserName.password === password) {
     req.loggedIn = true;
     setTimeout(() => {
       res.status(200).json({
-        payload: token
+        payload: token,
+        user: foundUserName
       });
     }, 1000);
   } else {
-    res
-      .status(403)
-      .json({ error: 'Username or Password incorrect. Please see Readme' });
+    res.status(403).json({ error: 'Username or Password incorrect.' });
+  }
+});
+
+server.post('/api/signUp', (req, res) => {
+  const {
+    username,
+    name,
+    password,
+    email,
+    isTeacher,
+    teacherName,
+    teacherID,
+    students,
+    testBank,
+    classSubject,
+    grade,
+    assignedTests,
+    completedTests
+  } = req.body;
+  const newUser = {
+    id: userID,
+    username,
+    name,
+    email,
+    password,
+    isTeacher,
+    teacherID,
+    teacherName,
+    students,
+    testBank,
+    classSubject,
+    grade,
+    assignedTests,
+    completedTests
+  };
+  const findUserName = item => {
+    return item.username === username;
+  };
+  const findEmail = item => {
+    return item.email === email;
+  };
+  const foundUserName = users.find(findUserName);
+  const foundEmail = users.find(findEmail);
+  if (foundUserName) {
+    res.status(403).json({
+      error: 'That username already exists. Please choose another username'
+    });
+  } else if (foundEmail) {
+    res.status(403).json({
+      error:
+        'That email is already being used. Request reset password or use a different email'
+    });
+  } else {
+    req.loggedIn = true;
+    setTimeout(() => {
+      res.status(200).json({
+        payload: token,
+        newUser
+      });
+    }, 1000);
+    users.push(newUser);
+    userID++;
+    users[newUser.teacherID].studentIds.push(newUser.id);
   }
 });
 
@@ -97,28 +317,55 @@ server.get('/testById/:id', authenticator, (req, res) => {
   }
 });
 
-server.post('/tests', authenticator, (req, res) => {
-  const { score, creator, title, testTaker, questions } = req.body;
-  const newItem = { title, price, imageUrl, description, shipping, id: testID };
-  if (!title || !creator) {
-    return sendUserError(
-      'Ya gone did goofed! title and creator are required to create an item in the item DB.',
-      res
-    );
-  }
-  const findTestByTitle = item => {
-    return item.title === title;
+server.get('/userById/:id', authenticator, (req, res) => {
+  const { id } = req.params;
+
+  const findUser = item => {
+    return item.id == id;
   };
-  if (tests.find(findTestByTitle)) {
-    return sendUserError(
-      `Ya gone did goofed! ${title} already exists in the item DB.`,
-      res
-    );
+  const foundUser = users.find(findUser);
+
+  if (foundUser) {
+    res.json(foundUser);
+  } else {
+    sendUserError('No user by that ID exists in the user DB', res);
   }
+});
+
+server.get('/testsByCreator/:creator', authenticator, (req, res) => {
+  const { creator } = req.params;
+  const results = tests.filter(test =>
+    test.creator.toLowerCase().includes(creator.toLocaleLowerCase())
+  );
+  if (results.length > 0) {
+    res.json(results);
+  }
+});
+
+server.post('/tests', authenticator, (req, res) => {
+  const {
+    score,
+    creator,
+    title,
+    testTaker,
+    questions,
+    isEditing,
+    isSaving
+  } = req.body;
+  const newItem = {
+    score,
+    title,
+    creator,
+    testTaker,
+    questions,
+    isEditing,
+    isSaving,
+    id: testID
+  };
 
   tests.push(newItem);
   testID++;
-  res.json(tests);
+  res.json(newItem);
 });
 
 server.put('/tests/:id', authenticator, (req, res) => {
@@ -136,7 +383,7 @@ server.put('/tests/:id', authenticator, (req, res) => {
     if (title) foundTest.title = title;
     if (testTaker) foundTest.testTaker = testTaker;
     if (questions) foundTest.questions = questions;
-    res.json(tests);
+    res.json(foundTest);
   }
 });
 
@@ -155,6 +402,51 @@ server.delete('/tests/:id', authenticator, (req, res) => {
 
 server.get('/', function(req, res) {
   res.send('App is working 👍');
+});
+
+server.get('/teachers', (req, res) => {
+  let filtered = users.filter(usr => {
+    return usr.isTeacher;
+  });
+  let reduced = filtered.map(usr => {
+    return { id: usr.id, name: usr.name };
+  });
+  res.json(reduced);
+});
+
+server.get('/allusers', authenticator, (req, res) => {
+  res.json(users);
+});
+
+//so, send student id up. find students teacher. search teachers classe's students to find the class that contains the student.
+//then send that class down into state to play with the tests and the assignments
+server.get('/getAssignments/:id', authenticator, (req, res) => {
+  const { id } = req.params;
+  const foundUser = users.find(item => item.id == id);
+
+  if (foundUser) {
+    const teacher = users.find(item => item.id == foundUser.teacherId)
+    const studentClass = teacher.classes.find(item => item.students.find(stud => stud === foundUser.id) );
+    
+    res.status(200).json(studentClass);
+  } else {
+    sendUserError('No user by that ID exists in the user DB', res);
+  }
+});
+
+server.put('/updateUser/:usr', authenticator, (req, res) => {
+  const usr = req.params;
+  const id = usr.id;
+  const findUser = item => {
+    return item.id == id;
+  };
+  const foundUser = users.find(findUser);
+  if (foundUser) {
+    foundUser = usr;
+    res.json(foundUser);
+  } else {
+    sendUserError('No user by that ID exists in the user DB', res);
+  }
 });
 
 server.listen(port, err => {
