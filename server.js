@@ -194,7 +194,8 @@ let users = [
     teacherId: 1,
     gpa: 0,
     assignedTests: [0, 1, 2, 3],
-    completedTests: [0, 1]
+    completedTests: [0, 1] 
+    // {testid: testid, testTitle, answersList, gradedAnswers, scorePercentage}
   }
 ];
 
@@ -426,6 +427,21 @@ server.get('/getAssignments/:id', authenticator, (req, res) => {
     const studentClass = teacher.classes.find(item => item.students.find(stud => stud === foundUser.id) );
     
     res.status(200).json(studentClass);
+  } else {
+    sendUserError('No user by that ID exists in the user DB', res);
+  }
+});
+
+server.put('/updateUser/:usr', authenticator, (req, res) => {
+  const usr = req.params;
+  const id = usr.id;
+  const findUser = item => {
+    return item.id == id;
+  };
+  const foundUser = users.find(findUser);
+  if (foundUser) {
+    foundUser = usr;
+    res.json(foundUser);
   } else {
     sendUserError('No user by that ID exists in the user DB', res);
   }
