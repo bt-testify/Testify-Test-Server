@@ -435,14 +435,15 @@ server.get('/getAssignments/:id', authenticator, (req, res) => {
 });
 
 server.put('/updateUser/:usr', authenticator, (req, res) => {
-  const usr = req.params;
-  const id = usr.id;
+  console.log(req, 'res: ', req);
+  const { id } = req.params;
+  const { student } = req.body;
   const findUser = item => {
     return item.id == id;
   };
   const foundUser = users.find(findUser);
   if (foundUser) {
-    foundUser = usr;
+    if(student.completedTests[completedTests.length-1]) foundUser.completedTests.push(student.completedTests[completedTests.length-1]);
     res.json(foundUser);
   } else {
     sendUserError('No user by that ID exists in the user DB', res);
@@ -453,3 +454,8 @@ server.listen(port, err => {
   if (err) console.log(err);
   console.log(`server is listening on port ${port}`);
 });
+
+// completedTest = { 
+//   testId: dummyTest.id, testTitle: dummyTest.title, answersList: answerList,
+//   gradedAnswers: gradedAnswers, scorePercentage: scorePercentage,
+//   assignedDate : 'fix me', completedDate: `${today.getMonth()+1}-${today.getDate()}-${today.getFullYear()}`};
