@@ -316,6 +316,21 @@ server.get('/testById/:id', authenticator, (req, res) => {
   }
 });
 
+server.get('/userById/:id', authenticator, (req, res) => {
+  const { id } = req.params;
+
+  const findUser = item => {
+    return item.id == id;
+  };
+  const foundUser = users.find(findUser);
+
+  if (foundUser) {
+    res.json(foundUser);
+  } else {
+    sendUserError('No user by that ID exists in the user DB', res);
+  }
+});
+
 server.get('/testsByCreator/:creator', authenticator, (req, res) => {
   const { creator } = req.params;
   const results = tests.filter(test =>
@@ -400,18 +415,6 @@ server.get('/teachers', (req, res) => {
 
 server.get('/allusers', authenticator, (req, res) => {
   res.json(users);
-});
-server.get('/users/:id', authenticator, (req, res) => {
-  const { id } = req.params;
-  const foundUser = users.find(item => item.id == id);
-
-  if (foundUser) {
-    const ItemRemoved = { ...foundUser };
-    users = users.filter(item => item.id != id);
-    res.status(200).json(users);
-  } else {
-    sendUserError('No user by that ID exists in the user DB', res);
-  }
 });
 
 server.listen(port, err => {
