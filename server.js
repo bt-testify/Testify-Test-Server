@@ -144,7 +144,7 @@ let users = [
       {
         id: 0,
         subject: 'Math',
-        students: [],
+        students: [2],
         testsAssigned: [
           {
             id: 0,
@@ -157,7 +157,7 @@ let users = [
       {
         id: 1,
         subject: 'History',
-        students: [],
+        students: [2],
         testsAssigned: [
           {
             id: 1,
@@ -204,7 +204,7 @@ let users = [
         testId: 0,
         title: 'Math Test',
         creator: 'Mrs. Mathews'
-      },
+      }
       // {
       //   answersList: ['Abraham Lincoln', 'T', '1776'],
       //   assignedDate: '10-20-2019',
@@ -407,16 +407,32 @@ server.put('/tests/:id', authenticator, (req, res) => {
   }
 });
 
-server.put('/assignedCompleted/:id', authenticator, (req, res) => {
+server.put('/updateClasses/:id', authenticator, (req, res) => {
   const { id } = req.params;
   const findUserById = item => {
     return item.id == id;
   };
   const foundUser = users.find(findUserById);
-  const { completedTests, assignedTests } = req.body;
+  const { classes } = req.body;
+  if (foundUser) {
+    if (classes) foundUser.classes = classes;
+
+    res.json(foundUser);
+  } else {
+    sendUserError('No user by that ID exists in the user DB', res);
+  }
+});
+
+server.put('/updateCompletedTests/:id', authenticator, (req, res) => {
+  const { id } = req.params;
+  const findUserById = item => {
+    return item.id == id;
+  };
+  const foundUser = users.find(findUserById);
+  const { completedTests } = req.body;
   if (foundUser) {
     if (completedTests) foundUser.completedTests = completedTests;
-    if (assignedTests) foundUser.assignedTests = assignedTests;
+
     res.json(foundUser);
   } else {
     sendUserError('No user by that ID exists in the user DB', res);
@@ -586,7 +602,7 @@ server.listen(port, err => {
 //   }
 // });
 
-// completedTest = { 
+// completedTest = {
 //   testId: dummyTest.id, testTitle: dummyTest.title, answersList: answerList,
 //   gradedAnswers: gradedAnswers, scorePercentage: scorePercentage,
 //   assignedDate : 'fix me', completedDate: `${today.getMonth()+1}-${today.getDate()}-${today.getFullYear()}`};
