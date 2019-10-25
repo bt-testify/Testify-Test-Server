@@ -91,7 +91,7 @@ let users = [
   {
     id: 0,
     username: 'steve123',
-    name: 'steve',
+    name: 'Steve',
     email: 'steve@gmail.com ',
     password: '123',
     isTeacher: true,
@@ -99,7 +99,7 @@ let users = [
       {
         id: 0,
         subject: 'Math',
-        students: [2],
+        students: [],
         testsAssigned: [
           {
             id: 0,
@@ -112,19 +112,12 @@ let users = [
       {
         id: 1,
         subject: 'History',
-        students: [2],
-        testsAssigned: [
-          {
-            id: 0,
-            title: 'History Test',
-            assignedDate: '10/22/19',
-            dueDate: '10/25/19'
-          }
-        ]
+        students: [],
+        testsAssigned: []
       }
     ],
 
-    studentIds: [2],
+    studentIds: [2, 3],
     testIds: [0],
 
     teacherName: '',
@@ -144,7 +137,7 @@ let users = [
       {
         id: 0,
         subject: 'Math',
-        students: [2],
+        students: [],
         testsAssigned: [
           {
             id: 0,
@@ -157,7 +150,7 @@ let users = [
       {
         id: 1,
         subject: 'History',
-        students: [2],
+        students: [],
         testsAssigned: [
           {
             id: 0,
@@ -169,7 +162,7 @@ let users = [
       }
     ],
 
-    studentIds: [2],
+    studentIds: [2, 3, 2],
     testIds: [0],
 
     teacherName: '',
@@ -187,7 +180,7 @@ let users = [
     isTeacher: false,
     classes: [],
 
-    studentIds: [2],
+    studentIds: [],
     testIds: [0],
 
     teacherName: 'Mrs. Mathews',
@@ -212,7 +205,7 @@ let users = [
         scorePercentage: 0,
         testId: 1,
         title: 'History Test',
-        creator: 'Mrs. Mathews'
+        creator: 'Steve'
       }
     ],
     completedTests: [
@@ -234,7 +227,67 @@ let users = [
         scorePercentage: '1',
         testId: 1,
         title: 'History Test',
+        creator: 'Steve'
+      }
+    ]
+  },
+  {
+    id: 3,
+    username: 'dan135',
+    name: 'Dan',
+    email: 'dan@school.com',
+    password: '135',
+    isTeacher: false,
+    classes: [],
+
+    studentIds: [2],
+    testIds: [0],
+
+    teacherName: 'Steve',
+    teacherId: '',
+    gpa: 0,
+    assignedTests: [
+      {
+        answersList: [],
+        assignedDate: '10-20-2019',
+        completedDate: null,
+        gradedAnswers: [],
+        scorePercentage: 0,
+        testId: 0,
+        title: 'Math Test',
         creator: 'Mrs. Mathews'
+      },
+      {
+        answersList: [],
+        assignedDate: '10-20-2019',
+        completedDate: null,
+        gradedAnswers: [],
+        scorePercentage: 0,
+        testId: 1,
+        title: 'History Test',
+        creator: 'Steve'
+      }
+    ],
+    completedTests: [
+      {
+        answersList: ['36', 'T', 'assincompasdf'],
+        assignedDate: '10-20-2019',
+        completedDate: '10-24-2019',
+        gradedAnswers: [true, true, false],
+        scorePercentage: '1',
+        testId: 0,
+        title: 'Math Test',
+        creator: 'Mrs. Mathews'
+      },
+      {
+        answersList: ['Abraham Lincoln', 'T', '1776'],
+        assignedDate: '10-20-2019',
+        completedDate: '10-24-2019',
+        gradedAnswers: [true, true, false],
+        scorePercentage: '1',
+        testId: 1,
+        title: 'History Test',
+        creator: 'Steve'
       }
     ]
   }
