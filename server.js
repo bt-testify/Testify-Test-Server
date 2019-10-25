@@ -115,7 +115,7 @@ let users = [
         students: [2],
         testsAssigned: [
           {
-            id: 0,
+            id: 1,
             title: 'History Test',
             assignedDate: '10/22/19',
             dueDate: '10/25/19'
@@ -160,7 +160,7 @@ let users = [
         students: [2],
         testsAssigned: [
           {
-            id: 0,
+            id: 1,
             title: 'History Test',
             assignedDate: '10/22/19',
             dueDate: '10/25/19'
@@ -193,28 +193,7 @@ let users = [
     teacherName: 'Mrs. Mathews',
     teacherId: 1,
     gpa: 0,
-    assignedTests: [
-      {
-        answersList: [],
-        assignedDate: '10-20-2019',
-        completedDate: null,
-        gradedAnswers: [],
-        scorePercentage: 0,
-        testId: 0,
-        title: 'Math Test',
-        creator: 'Mrs. Mathews'
-      },
-      {
-        answersList: [],
-        assignedDate: '10-20-2019',
-        completedDate: null,
-        gradedAnswers: [],
-        scorePercentage: 0,
-        testId: 1,
-        title: 'History Test',
-        creator: 'Mrs. Mathews'
-      }
-    ],
+    assignedTests: [],
     completedTests: [
       {
         answersList: ['36', 'T', 'assincompasdf'],
@@ -226,16 +205,16 @@ let users = [
         title: 'Math Test',
         creator: 'Mrs. Mathews'
       },
-      {
-        answersList: ['Abraham Lincoln', 'T', '1776'],
-        assignedDate: '10-20-2019',
-        completedDate: '10-24-2019',
-        gradedAnswers: [true, true, false],
-        scorePercentage: '1',
-        testId: 1,
-        title: 'History Test',
-        creator: 'Mrs. Mathews'
-      }
+      // {
+      //   answersList: ['Abraham Lincoln', 'T', '1776'],
+      //   assignedDate: '10-20-2019',
+      //   completedDate: '10-24-2019',
+      //   gradedAnswers: [true, true, false],
+      //   scorePercentage: '1',
+      //   testId: 1,
+      //   title: 'History Test',
+      //   creator: 'Mrs. Mathews'
+      // }
     ]
   }
 ];
@@ -561,17 +540,14 @@ server.get('/allusers', authenticator, (req, res) => {
   res.json(users);
 });
 
-//so, send student id up. find students teacher. search teachers classe's students to find the class that contains the student.
-//then send that class down into state to play with the tests and the assignments
+//this grabs student's teacher's classes and sends classes[x] back down to be used by student dashboard.
 server.get('/getAssignments/:id', authenticator, (req, res) => {
   const { id } = req.params;
   const foundUser = users.find(item => item.id == id);
 
   if (foundUser) {
     const teacher = users.find(item => item.id == foundUser.teacherId);
-    const studentClass = teacher.classes.find(item =>
-      item.students.find(stud => stud === foundUser.id)
-    );
+    const studentClass = teacher.classes;
 
     res.status(200).json(studentClass);
   } else {
@@ -579,10 +555,36 @@ server.get('/getAssignments/:id', authenticator, (req, res) => {
   }
 });
 
+server.get('/getStudents', (req, res) => {
+  let filtered = users.filter(usr => {
+    return !usr.isTeacher;
+  });
+  let reduced = filtered.map(usr => {
+    return { id: usr.id, name: usr.name };
+  });
+  res.json(reduced);
+});
+
 server.listen(port, err => {
   if (err) console.log(err);
   console.log(`server is listening on port ${port}`);
 });
+
+// server.get('/getAssignments/:id', authenticator, (req, res) => {
+//   const { id } = req.params;
+//   const foundUser = users.find(item => item.id == id);
+
+//   if (foundUser) {
+//     const teacher = users.find(item => item.id == foundUser.teacherId);
+//     const studentClass = teacher.classes.find(item =>
+//       item.students.find(stud => stud === foundUser.id)
+//     );
+
+//     res.status(200).json(studentClass);
+//   } else {
+//     sendUserError('No user by that ID exists in the user DB', res);
+//   }
+// });
 
 // completedTest = { 
 //   testId: dummyTest.id, testTitle: dummyTest.title, answersList: answerList,
