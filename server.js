@@ -91,7 +91,7 @@ let users = [
   {
     id: 0,
     username: 'steve123',
-    name: 'steve',
+    name: 'Steve',
     email: 'steve@gmail.com ',
     password: '123',
     isTeacher: true,
@@ -99,7 +99,7 @@ let users = [
       {
         id: 0,
         subject: 'Math',
-        students: [2],
+        students: [],
         testsAssigned: [
           {
             id: 0,
@@ -115,7 +115,7 @@ let users = [
         students: [2],
         testsAssigned: [
           {
-            id: 0,
+            id: 1,
             title: 'History Test',
             assignedDate: '10/22/19',
             dueDate: '10/25/19'
@@ -124,7 +124,7 @@ let users = [
       }
     ],
 
-    studentIds: [2],
+    studentIds: [2, 3],
     testIds: [0],
 
     teacherName: '',
@@ -160,7 +160,7 @@ let users = [
         students: [2],
         testsAssigned: [
           {
-            id: 0,
+            id: 1,
             title: 'History Test',
             assignedDate: '10/22/19',
             dueDate: '10/25/19'
@@ -169,7 +169,7 @@ let users = [
       }
     ],
 
-    studentIds: [2],
+    studentIds: [2, 3, 2],
     testIds: [0],
 
     teacherName: '',
@@ -187,34 +187,13 @@ let users = [
     isTeacher: false,
     classes: [],
 
-    studentIds: [2],
+    studentIds: [],
     testIds: [0],
 
     teacherName: 'Mrs. Mathews',
     teacherId: 1,
     gpa: 0,
-    assignedTests: [
-      {
-        answersList: [],
-        assignedDate: '10-20-2019',
-        completedDate: null,
-        gradedAnswers: [],
-        scorePercentage: 0,
-        testId: 0,
-        title: 'Math Test',
-        creator: 'Mrs. Mathews'
-      },
-      {
-        answersList: [],
-        assignedDate: '10-20-2019',
-        completedDate: null,
-        gradedAnswers: [],
-        scorePercentage: 0,
-        testId: 1,
-        title: 'History Test',
-        creator: 'Mrs. Mathews'
-      }
-    ],
+    assignedTests: [],
     completedTests: [
       {
         answersList: ['36', 'T', 'assincompasdf'],
@@ -225,17 +204,17 @@ let users = [
         testId: 0,
         title: 'Math Test',
         creator: 'Mrs. Mathews'
-      },
-      {
-        answersList: ['Abraham Lincoln', 'T', '1776'],
-        assignedDate: '10-20-2019',
-        completedDate: '10-24-2019',
-        gradedAnswers: [true, true, false],
-        scorePercentage: '1',
-        testId: 1,
-        title: 'History Test',
-        creator: 'Mrs. Mathews'
       }
+      // {
+      //   answersList: ['Abraham Lincoln', 'T', '1776'],
+      //   assignedDate: '10-20-2019',
+      //   completedDate: '10-24-2019',
+      //   gradedAnswers: [true, true, false],
+      //   scorePercentage: '1',
+      //   testId: 1,
+      //   title: 'History Test',
+      //   creator: 'Mrs. Mathews'
+      // }
     ]
   }
 ];
@@ -428,16 +407,32 @@ server.put('/tests/:id', authenticator, (req, res) => {
   }
 });
 
-server.put('/assignedCompleted/:id', authenticator, (req, res) => {
+server.put('/updateClasses/:id', authenticator, (req, res) => {
   const { id } = req.params;
   const findUserById = item => {
     return item.id == id;
   };
   const foundUser = users.find(findUserById);
-  const { completedTests, assignedTests } = req.body;
+  const { classes } = req.body;
+  if (foundUser) {
+    if (classes) foundUser.classes = classes;
+
+    res.json(foundUser);
+  } else {
+    sendUserError('No user by that ID exists in the user DB', res);
+  }
+});
+
+server.put('/updateCompletedTests/:id', authenticator, (req, res) => {
+  const { id } = req.params;
+  const findUserById = item => {
+    return item.id == id;
+  };
+  const foundUser = users.find(findUserById);
+  const { completedTests } = req.body;
   if (foundUser) {
     if (completedTests) foundUser.completedTests = completedTests;
-    if (assignedTests) foundUser.assignedTests = assignedTests;
+
     res.json(foundUser);
   } else {
     sendUserError('No user by that ID exists in the user DB', res);
@@ -561,17 +556,14 @@ server.get('/allusers', authenticator, (req, res) => {
   res.json(users);
 });
 
-//so, send student id up. find students teacher. search teachers classe's students to find the class that contains the student.
-//then send that class down into state to play with the tests and the assignments
+//this grabs student's teacher's classes and sends classes[x] back down to be used by student dashboard.
 server.get('/getAssignments/:id', authenticator, (req, res) => {
   const { id } = req.params;
   const foundUser = users.find(item => item.id == id);
 
   if (foundUser) {
     const teacher = users.find(item => item.id == foundUser.teacherId);
-    const studentClass = teacher.classes.find(item =>
-      item.students.find(stud => stud === foundUser.id)
-    );
+    const studentClass = teacher.classes;
 
     res.status(200).json(studentClass);
   } else {
@@ -579,7 +571,38 @@ server.get('/getAssignments/:id', authenticator, (req, res) => {
   }
 });
 
+server.get('/getStudents', (req, res) => {
+  let filtered = users.filter(usr => {
+    return !usr.isTeacher;
+  });
+  let reduced = filtered.map(usr => {
+    return { id: usr.id, name: usr.name };
+  });
+  res.json(reduced);
+});
+
 server.listen(port, err => {
   if (err) console.log(err);
   console.log(`server is listening on port ${port}`);
 });
+
+// server.get('/getAssignments/:id', authenticator, (req, res) => {
+//   const { id } = req.params;
+//   const foundUser = users.find(item => item.id == id);
+
+//   if (foundUser) {
+//     const teacher = users.find(item => item.id == foundUser.teacherId);
+//     const studentClass = teacher.classes.find(item =>
+//       item.students.find(stud => stud === foundUser.id)
+//     );
+
+//     res.status(200).json(studentClass);
+//   } else {
+//     sendUserError('No user by that ID exists in the user DB', res);
+//   }
+// });
+
+// completedTest = {
+//   testId: dummyTest.id, testTitle: dummyTest.title, answersList: answerList,
+//   gradedAnswers: gradedAnswers, scorePercentage: scorePercentage,
+//   assignedDate : 'fix me', completedDate: `${today.getMonth()+1}-${today.getDate()}-${today.getFullYear()}`};
